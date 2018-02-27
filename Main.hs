@@ -1,13 +1,17 @@
-{-# LANGUAGE OverloadedStrings          #-}
+|{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Data.Attoparsec.Text
-import Data.Text (Text)
+import           Data.Attoparsec.Text hiding (take)
+import           Data.Char
+import           Data.Text            (Text)
 import qualified Data.Text as T
-import Data.Char
+import qualified Data.Text.IO as TIO
 
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main =
+  do contents <- TIO.readFile "Celeron-G540-0x29"
+     print $ take 15 (T.lines contents)
+     print $ parseOnly pInstruction (T.lines contents !! 25)
 
 
 headerText :: Text
@@ -27,24 +31,25 @@ ins2 = "              0f0d04cdff000000  1  8  5  2 (0f0d04cdff000000000000000000
 ins3 = "                        0f0d00  1  3  5  2 (0f0d0000000000000000000000000000)"
 
 data CPU = CPU {
-  vendor :: Text
-  , family :: Text
-  , model :: Text
+  vendor      :: Text
+  , family    :: Text
+  , model     :: Text
   , modelname :: Text
-  , stepping :: Text
+  , stepping  :: Text
   , microcode :: Text
   } deriving (Show)
 
 data Instruction = Instruction {
   instruction :: Text
-  , v :: Text
-  , l :: Text
-  , s :: Text
-  , c :: Text
+  , v         :: Text
+  , l         :: Text
+  , s         :: Text
+  , c         :: Text
   } deriving (Show)
 
+-- code below documented at https://hackage.haskell.org/package/attoparsec-0.13.2.2/docs/Data-Attoparsec-Text.html
 
-alphaNums = takeWhile1 (\x -> isDigit x || isAlpha x || x=='(' || x==')')
+alphaNums = takeWhile1 (\x -> isDigit x || isAlpha x || x == '(' || x == ')' )
 -- how do we use the code above?
 parsedLettersNumbers = parseOnly alphaNums "foo45 bar75"
 failparsed = parseOnly alphaNums "$()$*"
