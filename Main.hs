@@ -1,4 +1,4 @@
-|{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 import           Data.Attoparsec.Text hiding (take)
