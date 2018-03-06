@@ -70,4 +70,7 @@ pModelName = pString "# model name\t: "
 pStepping = pString "# stepping\t: "
 pMicrocode = pString "# microcode\t: 0x29"
 
-qHack = pVendor *> pFamily <|> pModel <|> pModelName <|> pStepping <|> pMicrocode
+qHack :: Parser CPUData
+qHack = pVendor *> pFamily <|> pModel <|> pModelName <|> pStepping <|> pMicrocode <|> pInstruction
+
+data CPUData = Ins Instruction | Header Text
