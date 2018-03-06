@@ -48,13 +48,20 @@ extra-source-files:  ChangeLog.md
 -- Constraint on the version of Cabal needed to build this package.
 cabal-version:       >=1.10
 
+library
+  exposed-modules: Lib
+  build-depends: base
+               , text
+               , attoparsec >= 0.13
+
+  default-language:    Haskell2010
 
 executable sandsieve
   -- .hs or .lhs file containing the Main module.
   main-is:             Main.hs
 
   -- Modules included in this executable, other than Main.
-  -- other-modules:
+  other-modules: Lib
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -66,6 +73,28 @@ executable sandsieve
 
   -- Directories containing source files.
   -- hs-source-dirs:
+  ghc-options: -with-rtsopts=-A128M -j4 -n
 
   -- Base language which the package is written in.
   default-language:    Haskell2010
+
+test-suite sandsieve-test
+  type:          exitcode-stdio-1.0
+  main-is:       Spec.hs
+  build-depends: base
+               , sandsieve
+               , text
+               , hspec
+               , attoparsec
+  default-language: Haskell2010
+
+test-suite sandsieve-test2
+  type:          exitcode-stdio-1.0
+  main-is:       Test.hs
+  build-depends: base
+               , sandsieve
+               , tasty
+               , tasty-quickcheck
+               , tasty-smallcheck
+               , tasty-hunit
+  default-language: Haskell2010
