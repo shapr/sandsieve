@@ -9,6 +9,7 @@ import           Lib
 main :: IO ()
 main =
   do contents <- TIO.readFile "Celeron-G540-0x29"
-     let after13 = drop 13 $ T.lines contents
-     let results = map (parseOnly qHack) after13
-     print $ length results
+     let results = parseOnly pWorks contents
+     print $ length $ fromRight results
+
+fromRight (Right x) = x
