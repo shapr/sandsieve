@@ -23,7 +23,7 @@ data Instruction = Instruction {
 
 -- code below documented at https://hackage.haskell.org/package/attoparsec-0.13.2.2/docs/Data-Attoparsec-Text.html
 
-dropHeader = char '#' *> takeTill (\x -> x == '\n') *> char '\n'
+dropHeader = char '#' *> takeTill (== '\n') *> char '\n'
 alphaNums = takeWhile1 (\x -> isDigit x || isAlpha x || x == '(' || x == ')' )
 -- how do we use the code above?
 parsedLettersNumbers = parseOnly alphaNums "foo45 bar75"
@@ -43,7 +43,7 @@ parsedThings = parseOnly (many1 parseBits) ins1
 pInstruction :: Parser Instruction
 pInstruction = Instruction <$> spaceAN <*> spaceAN <*> spaceAN <*> spaceAN <*> spaceAN
 
-pManyIns = (pInstruction <* (spaces *> alphaNums))
+pManyIns = pInstruction <* (spaces *> alphaNums)
 
 pLine = dropHeader *> pManyIns
 
