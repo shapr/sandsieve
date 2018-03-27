@@ -23,7 +23,6 @@ data Instruction = Instruction {
 
 -- code below documented at https://hackage.haskell.org/package/attoparsec-0.13.2.2/docs/Data-Attoparsec-Text.html
 
-dropHeader = char '#' *> takeTill (== '\n') *> char '\n'
 alphaNums = takeWhile1 (\x -> isDigit x || isAlpha x || x == '(' || x == ')' )
 -- how do we use the code above?
 parsedLettersNumbers = parseOnly alphaNums "foo45 bar75"
@@ -69,19 +68,22 @@ headerText =
   \# stepping\t: 7\n\
   \# microcode\t: 0x29\n"
 
+dropHeader :: Parser Text
+dropHeader = string "#" *> takeTill (== '\n') *> string "\n"
+
 pTillEnd = takeTill $ \x -> x == '\n'
 
 -- pString s = string s *> alphaNums
--- lsp-rename
-pString s = string s *> pTillEnd
+pString s = string s *> pTillEnd <* string "\n"
 pVendor = pString "# vendor_id\t: "
 pFamily = pString "# cpu family\t: "
 pModel = pString "# model\t\t: "
 pModelName = pString "# model name\t: "
 pStepping = pString "# stepping\t: "
-pMicrocode = pString "# microcode\t: 0x29"
+pMicrocode = pString "# microcode\t: "
 
 -- qHack :: Parser CPUData
-qHack = pVendor *> pFamily <|> pModel <|> pModelName <|> pStepping <|> pMicrocode
+-- XXX submit <| to stdlib
+qHack = pVendor <|> pFamily <|> pModel <|> pModelName <|> pStepping <|> pMicrocode <|> dropHeader
 
 pWorks = many dropHeader *> many1 pManyIns
