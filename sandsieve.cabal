@@ -53,6 +53,7 @@ library
   build-depends: base
                , text
                , attoparsec >= 0.13
+               , mtl
 
   default-language:    Haskell2010
 
@@ -67,9 +68,15 @@ executable sandsieve
   -- other-extensions:
 
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.10 && <4.11
+  build-depends:       base
                      , attoparsec
                      , text
+                     , mtl
+                     , persistent
+                     , persistent-template
+                     , persistent-sqlite
+                     , resourcet
+                     , monad-logger
 
   -- Directories containing source files.
   -- hs-source-dirs:
