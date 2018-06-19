@@ -24,6 +24,8 @@ import           Lib hiding (CPU, Instruction)
 fromRight (Right x) = x
 fromRight _         = error "you did it wrong"
 
+sixtuple (a:b:c:d:e:f) = (a,b,c,d,e,f)
+
 files_to_read = ["A10-7860K", "i5-2467M-0x25", "Celeron-G540-0x29", "e3-1505M-0xa6"]
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
