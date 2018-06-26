@@ -44,9 +44,9 @@ CPU
     microcode    Text
     deriving Show Generic
 
-Upload
+Pair
     cpu CPU
-    instructions [Instruction]
+    instructions Instruction
 |]
 
 runDb = runStdoutLoggingT . runResourceT . withSqliteConn "sandsieve.db" . runSqlConn
@@ -54,8 +54,8 @@ runDb = runStdoutLoggingT . runResourceT . withSqliteConn "sandsieve.db" . runSq
 main :: IO ()
 main = do
   runDb $ runMigration migrateAll
-  rows <- liftIO $ runDb $ selectList [] [Asc UploadId]
-  contents <- TIO.readFile "A10-7860K"
+  rows <- liftIO $ runDb $ selectList [] [Asc PairId]
+  contents <- TIO.readFile "Celeron-G540-0x29"
   let results = parseOnly pWorks contents
       headers = parseOnly (many1 qHack) contents
       cleanheaders = filter (/= "\n") $ fromRight headers
