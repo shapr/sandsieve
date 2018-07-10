@@ -25,9 +25,6 @@ import           Database.Persist.Sqlite
 import           Database.Persist.TH
 import           GHC.Generics
 
-
--- import           Lib hiding (CPU, Instruction)
-
 fromRight (Right x) = x
 fromRight _         = error "you did it wrong"
 
@@ -146,8 +143,6 @@ pModelName = pString "# model name\t: "
 pStepping = pString "# stepping\t: "
 pMicrocode = pString "# microcode\t: "
 
--- qHack :: Parser CPUData
--- XXX submit <| to stdlib
 qHack = pVendor <|> pFamily <|> pModel <|> pModelName <|> pStepping <|> pMicrocode <|> dropHeader
 
 pWorks = many dropHeader *> many1 pManyIns
